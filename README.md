@@ -1,4 +1,4 @@
-# skeeter
+# skeeter ![SlackBot Run](https://github.com/janaab11/skeeter/workflows/SlackBot%20Run/badge.svg)
 
 Slack bot for collecting gossip in channels
 
