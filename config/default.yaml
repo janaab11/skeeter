@@ -1,0 +1,6 @@
+skeeter-speech:
+  sources: [machine-learning, research, product, platform, planning, ml-product, product-sales]
+  words: [speech, language, paper, seminar]
+#skeeter-testing:
+#  sources: [machine-learning, research, product, platform, planning, ml-product, product-sales]
+#  words: [hi]
