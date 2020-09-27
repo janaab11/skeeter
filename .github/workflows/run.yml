@@ -1,0 +1,28 @@
+name: SlackBot Run
+
+on:
+  schedule:
+    - cron: '5/25 * * * *'
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.6
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools
+        pip install poetry
+    - name: Install python dependencies
+      run: poetry install
+
+    - name: Post matches
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      run: |
+        poetry run skeeter --minutes 30
