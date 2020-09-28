@@ -2,7 +2,7 @@ name: SlackBot Run
 
 on:
   schedule:
-    - cron: '5/25 * * * *'
+    - cron: '*/30 * * * *'
 
 jobs:
   post:
@@ -25,4 +25,4 @@ jobs:
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       run: |
-        poetry run skeeter --minutes 30
+        poetry run skeeter --config config/default.yaml --limit 25 --minutes 30
