@@ -1,9 +1,10 @@
 import os
 from pydash import py_
 from slack import WebClient
-from skeeter.utils import older_than_threshold, clean_url
+from skeeter.utils import older_than_threshold, clean_url, handle_exceptions_for_class
 
 
+@handle_exceptions_for_class
 class Bot:
     """ Instantiates a Bot object to handle Slack interactions."""
 
