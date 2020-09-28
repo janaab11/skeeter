@@ -7,3 +7,7 @@ def past_timestamp(**kwargs):
 
 def older_than_threshold(ts, threshold=0):
     return True if float(ts) < float(threshold) else False
+
+
+def clean_url(link):
+    return link.replace("&", "&amp;")

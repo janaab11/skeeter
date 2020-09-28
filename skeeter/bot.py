@@ -1,22 +1,22 @@
 import os
 from pydash import py_
 from slack import WebClient
-from skeeter.utils import older_than_threshold
+from skeeter.utils import older_than_threshold, clean_url
 
 
 class Bot:
     """ Instantiates a Bot object to handle Slack interactions."""
 
-    def __init__(self):
+    def __init__(self, token=None):
         """
         When we instantiate a new bot object, we access the app
         credentials set earlier in our local development environment.
         """
 
-        self.oauth = {
-            "bot_token": os.environ.get("SLACK_BOT_TOKEN"),
-        }
-        self.client = WebClient(self.oauth.get("bot_token"))
+        if not token:
+            token = os.environ.get("SLACK_BOT_TOKEN")
+
+        self.client = WebClient(token)
 
     def list_channels(self, limit=1000):
         """
@@ -104,4 +104,4 @@ class Bot:
         """
 
         response = self.client.chat_getPermalink(channel=channel, message_ts=message_ts)
-        return response.get("permalink", None)
+        return clean_url(response.get("permalink", None))
