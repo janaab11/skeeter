@@ -71,6 +71,7 @@ class Bot:
         """
 
         channel = self.channel_name_to_id(channel_name)
+
         if not self.duplicate_exists(channel, text):
             _ = self.client.chat_postMessage(
                 channel=channel, text=text, unfurl_links=unfurl_links
@@ -82,6 +83,7 @@ class Bot:
         """
 
         messages = self.list_messages(channel=channel)
+
         if any(message["text"] == text for message in messages):
             return True
         else:
@@ -94,6 +96,7 @@ class Bot:
 
         channels = self.list_channels()
         result = py_.find(channels, lambda channel: channel["name"] == channel_name)
+
         if result:
             return result["id"]
         else:
@@ -105,4 +108,5 @@ class Bot:
         """
 
         response = self.client.chat_getPermalink(channel=channel, message_ts=message_ts)
-        return clean_url(response.get("permalink", None))
+        clean_link = clean_url(response.get("permalink", None))
+        return f"<{clean_link}>"  # this is something weird slack does to all urls
