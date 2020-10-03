@@ -5,24 +5,50 @@ on:
     - cron: '5/20 * * * *'
 
 jobs:
-  post:
+  run:
+    name: run
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-      with:
-        python-version: 3.6
+      - name: Checkout public repo
+        uses: actions/checkout@v2
+        with:
+          path: public
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip setuptools
-        pip install poetry
-    - name: Install python dependencies
-      run: poetry install
+      - name: Checkout private logs
+        uses: actions/checkout@v2
+        with:
+          repository: janaab11/skeeter-logs
+          token: ${{ secrets.PRIVATE_REPO_PAT }}
+          path: private
 
-    - name: Post matches
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      run: |
-        poetry run skeeter --config config/default.yaml --limit 25 --minutes 60
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools
+          pip install poetry
+
+      - name: Install python dependencies
+        run: |
+          cd public
+          poetry install
+
+      - name: Post matches
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        run: |
+          cd public
+          poetry run skeeter --config config/default.yaml --limit 25 --minutes 60
+
+      - name: Push logs to remote
+        run: |
+          rsync -a public/logs/ private/logs
+          cd private
+          git config --global user.name "runner"
+          git config --global user.email "logs@vernacular.ai"
+          git add logs
+          git commit -m "updates logs"
+          git push
